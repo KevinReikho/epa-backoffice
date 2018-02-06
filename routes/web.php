@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,11 +31,11 @@ Route::get('put-existing', function() {
 
 Route::get('list', function() {
     $dir = '/';
-    $recursive = false; // Get subdirectories also?
+    $recursive = true; // Get subdirectories also?
     $contents = collect(Storage::cloud()->listContents($dir, $recursive));
 
     //return $contents->where('type', '=', 'dir'); // directories
-    return $contents->where('type', '=', 'file'); // files
+    return $contents; // files
 });
 
 Route::get('list-folder-contents', function() {
@@ -70,18 +70,66 @@ Route::get('list-folder-contents', function() {
     });
 });
 
-Route::get('get', function() {
-    $filename = 'test.txt';
+function recursive_content($content) {
+
+
+
+
+
+
+    if ($content["type"] == 'dir'){
+      $inner = Storage::cloud()->listContents($content['path'], false);
+      $content["content"] = array_map("recursive_content",$inner);
+    }
+
+
+  return $content;
+}
+
+Route::get('list-folder-contents', function() {
+    // The human readable folder name to get the contents of...
+    // For simplicity, this folder is assumed to exist in the root directory.
+
+    // Get root directory contents...
+    $contents = Storage::cloud()->listContents('/', false);
+
+    $contentsfinal = array_map("recursive_content",$contents);
+
+    return $contentsfinal;
+
+    // // Get the files inside the folder...
+    // $files = collect(Storage::cloud()->listContents($dir['path'], false))
+    //     ->where('type', '=', 'file');
+
+    // return $files->mapWithKeys(function($file) {
+    //     $filename = $file['filename'].'.'.$file['extension'];
+    //     $path = $file['path'];
+    //
+    //     // Use the path to download each file via a generated link..
+    //     // Storage::cloud()->get($file['path']);
+    //
+    //     return [$filename => $path];
+    // });
+
+});
+
+
+// Download a file with a route ?path=path
+Route::get('get', function(Request $request) {
 
     $dir = '/';
-    $recursive = false; // Get subdirectories also?
+    $path;
+    if ($request->has('path')){
+      $path = $request->path;
+    }
+    $recursive = true; // Get subdirectories also?
     $contents = collect(Storage::cloud()->listContents($dir, $recursive));
 
     $file = $contents
         ->where('type', '=', 'file')
-        ->where('filename', '=', pathinfo($filename, PATHINFO_FILENAME))
-        ->where('extension', '=', pathinfo($filename, PATHINFO_EXTENSION))
+        ->where('path', '=', $path)
         ->first(); // there can be duplicate file names!
+    $filename = $file['filename'];
 
     //return $file; // array with file info
 

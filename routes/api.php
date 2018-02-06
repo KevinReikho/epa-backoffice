@@ -46,8 +46,8 @@ Route::group(['middleware' => ['api', 'cors']], function () {
       $recursive = false; // Get subdirectories also?
       $contents = collect(Storage::cloud()->listContents($dir, $recursive));
 
-      //return $contents->where('type', '=', 'dir'); // directories
-      return $contents->where('type', '=', 'file'); // files
+      return $contents->where('type', '=', 'dir'); // directories
+      // return $contents->where('type', '=', 'file'); // files
   });
 
   Route::get('list-folder-contents', function() {
