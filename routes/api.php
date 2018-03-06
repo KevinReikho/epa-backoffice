@@ -23,6 +23,22 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => ['api', 'cors']], function () {
 
 
+/*** APP API****/
+/** USERS **/
+Route::get('/users',"UserController@index");
+
+Route::post('/users/add',"UserController@store");
+
+Route::get('/users/{id}',"UserController@show");
+
+Route::put('/users/{id}','UserController@update');
+
+Route::delete('/users/{id}','UserController@delete');
+
+
+
+/** GOOGLE DRIVE API ****/
+
   Route::get('/hi', function () {
       return view('welcome');
   });
