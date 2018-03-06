@@ -88,7 +88,7 @@ class UserController extends Controller
    *
    *
    */
-   public function update(Request $request){
+   public function delete(Request $request){
 
      $this->validate($request, [
              'id' => 'required',
