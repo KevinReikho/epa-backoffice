@@ -52,7 +52,7 @@ class UserController extends Controller
              $user->name=$request->name;
              $user->save();
 
-     return response()->json($answer,201);
+     return response()->json($user,201);
 
 
    }
@@ -79,7 +79,7 @@ class UserController extends Controller
              $user->name=$request->name;
              $user->save();
 
-     return response()->json($answer,201);
+     return response()->json($user,201);
    }
 
    /**
@@ -97,7 +97,7 @@ class UserController extends Controller
      $user = User::find($request->id);
              $user->delete();
 
-     return response()->json($answer,201);
+     return response(201);
 
 
    }
