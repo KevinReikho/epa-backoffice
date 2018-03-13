@@ -41,7 +41,6 @@ class UserController extends Controller
 
      $this->validate($request, [
              'email' => 'required',
-             'name' => 'required',
              'password' => 'required',
              ]);
 
@@ -68,7 +67,6 @@ class UserController extends Controller
      $this->validate($request, [
              'id' => 'required',
              'email' => 'required',
-             'name' => 'required',
              'password' => 'required',
              ]);
 
@@ -76,7 +74,6 @@ class UserController extends Controller
 
              $user->password=$request->password;
              $user->email=$request->email;
-             $user->name=$request->name;
              $user->save();
 
      return response()->json($user,201);
@@ -101,6 +98,29 @@ class UserController extends Controller
 
 
    }
+
+   public function authentifyUser(Request $request){
+    $this->validate($request, [
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+    $user= User::where('email',$request->email)->firstOrFail();
+
+    if($user != null){
+      if(Hash::check($request->password,$user->password)){
+        $answer=response();
+
+      }
+    else{
+    $answer=abort(403,'Wrong Password');
+    }
+    }
+    else{
+      $answer=abort(403, 'Unauthorized action.');
+      }
+    return $answer;
+    }
 
 
 
