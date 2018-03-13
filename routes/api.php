@@ -119,19 +119,20 @@ Route::delete('/users/{id}','UserController@delete');
 
 
   Route::get('get', function(Request $request) {
+
+
     $dir = '/';
     $path;
     $mimetype;
     $filename;
-    if ($request->has('mimetype')){
+    if ($request->has('mimetype') && $request->has('filename') && $request->has('path') ){
       $mimetype = $request->mimetype;
-    }
-    if ($request->has('filename')){
       $filename = $request->filename;
-    }
-    if ($request->has('path')){
       $path = $request->path;
+    } else {
+      return abort(405);
     }
+
     // $recursive = true; // Get subdirectories also?
     // $contents = collect(Storage::cloud()->listContents($dir, $recursive));
     //
