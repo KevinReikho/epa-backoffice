@@ -304,4 +304,5 @@ Route::get('/login','UserController@authentifyUser');
   });
 
 
+
 });
