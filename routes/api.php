@@ -35,7 +35,7 @@ Route::put('/users/{id}','UserController@update');
 
 Route::delete('/users/{id}','UserController@delete');
 
-Route::get('/login','UserController@authentifyUser')
+Route::get('/login','UserController@authentifyUser');
 
 
 
